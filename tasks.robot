@@ -35,6 +35,7 @@ Order robots from RobotSpareBin Industries Inc
         Go to order another robot
     END
     Create a ZIP file of the receipts
+    Log out and close the browser
 
 *** Keywords ***
 Read data from the vault
@@ -101,9 +102,15 @@ Take a screenshot of the robot
 Embed the robot screenshot to the receipt PDF file
     [Arguments]    ${screenshot}    ${receipt_html}    ${pdf}
     Html To Pdf
-    ...    ${receipt_html}<br><br><center><img src='${screenshot}' height='200'/></center>
+    # ...    ${receipt_html}<br><br><center><img src='${screenshot}' height='200'/></center>
     # ...    ${receipt_html}<br><br><style> img {display: block; margin-left: auto; margin-right: auto} </style><img src='${screenshot}' height='200'/>
+    # ...    ${receipt_html}<br><br><img src='${screenshot}' height='200' style="display: block; margin-left: auto; margin-right: auto;" />
+    # ...    ${receipt_html}<html><head></head><body><br>normal<br><strong>strong</strong><br><em>em</em><br><i>italic</i><br><b>bold</b><br><img src="${screenshot}" style="display: block; margin-left: auto; margin-right: auto; width:5%;" /></body></html>
+    ...    ${receipt_html}
     ...    ${pdf}
+    Open Pdf    ${pdf}
+    Add Watermark Image To Pdf    ${screenshot}    ${pdf}
+    Close Pdf    ${pdf}
 
 Go to order another robot
     Click Button    order-another
@@ -113,3 +120,6 @@ Create a ZIP file of the receipts
     Archive Folder With Zip
     ...    ${OUTPUT_DIR}${/}SalesReceipt
     ...    ${zip_file_name}
+
+Log out and close the browser
+    Close Browser
